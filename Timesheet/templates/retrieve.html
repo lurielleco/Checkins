@@ -1,0 +1,166 @@
+{%extends 'base.html' %}
+
+{% block content %}
+<!-- New Retrieve Form -->
+
+<!-- Form -->
+        <div class="col-lg-12">
+            <div class="card">
+            <div class="card-body">
+              <ul class="nav nav-tabs nav-tabs-bordered">
+                  <form action="{% url 'index' %}">
+                    <li class="nav-item">
+                      <button class="nav-link" data-bs-toggle="tab" data-bs-target="#checkins">Checkins</button>
+                    </li>
+                      </form><!-- End Retrieve Form -->
+
+                    <li class="nav-item">
+                      <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#per-user">Checkin Per User</button>
+                    </li>
+
+              </ul>
+              <div class="tab-content pt-2">
+
+                <div class="tab-pane fade checkins pt-3" id="checkins">
+
+                </div>
+
+                <div class="tab-pane fade show active per-user pt-3" id="per-user">
+                  <!-- New Proj Form -->
+
+                <br></br>
+                  <form method="POST" action="{% url 'retrieve' %}">
+                    {% csrf_token %}
+                    <div class="row mb-3">
+                      <label for="inputUser" class="col-sm-2 col-form-label">User</label>
+                        <div class="col-sm-10">
+                          <select class="form-select" aria-label="Default select example" name = "selectUser">
+                            <option disabled>Users</option>
+                            {% for item in distinct_user %}
+                              <option value="{{ item.user }}">{{item.user}}</option>
+                            {% endfor %}
+                          </select>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                      <label class="col-sm-2 col-form-label">Date</label>
+                      <div class="col-sm-10">
+                          <input type="date" class="form-control" value="01/01/1900" name="date_checkin" disabled>
+                      </div>
+                    </div>
+                    <div class="row mb-3">
+                      <label for="inputProject" class="col-sm-2 col-form-label">Project</label>
+                      <div class="col-sm-10">
+                        <select class="form-select" aria-label="Default select example" disabled>
+                            <option disabled>Project</option>
+                            {% for item in distinct_project %}
+                              <option value="{{ item.project }}">{{item.project}}</option>
+                            {% endfor %}
+                          </select>
+                      </div>
+                    </div>
+                  <button type = "submit" class = "btn btn-primary">Retrieve</button>
+                  </form><!-- End Retrieve Form -->
+                <br></br>
+                <table class="table table-striped table-bordered" id="table"
+                        data-toggle="table"
+                        data-search="true"
+                        data-show-export="true" data-export-options='{"fileName": "user_checkins"}'>
+                <!--<table class="table table-bordered table-striped datatable" data-sortable=”true”> -->
+                  <thead>
+                    <tr>
+                      <th scope="col" data-sortable="true">User</th>
+                      <th scope="col" data-sortable="true">Date Checkin</th>
+                      <th scope="col" data-sortable="true">Hours</th>
+                      <th scope="col" data-sortable="true">Project</th>
+                    </tr>
+                  </thead>
+                    <tbody>
+                    {% for item in all %}
+                        <tr>
+                            <td scope = "row">{{item.user}}</td>
+                            <td scope = "row">{{item.date_checkin}} </td>
+                            <td scope = "row">{{item.hours}} </td>
+                            <td scope = "row">{{item.project}} </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+
+                  </form><!-- End New Proj Form -->
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+<script>
+var $table = $('#table');
+$(function () {
+    $('#toolbar').find('select').change(function () {
+        $table.bootstrapTable('refreshOptions', {
+            exportDataType: $(this).val()
+        });
+    });
+})
+var trBoldBlue = $("table");
+$(trBoldBlue).on("click", "tr", function () {
+    $(this).toggleClass("bold-blue");
+});
+</script>
+
+{% endblock %}
+
+{% block chart %}
+
+<div class = "row">
+     <div class = "col-md-8">
+      <div>
+        <canvas id="myChart"></canvas>
+      </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+      const ctx = document.getElementById('myChart');
+
+      new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: ['1', '2', '3'],
+          datasets: [{
+            axis: 'y',
+            label: 'My First Dataset',
+            data: [65, 59, 80, 81, 56, 55, 40],
+            fill: false,
+            backgroundColor: [
+              'rgba(255, 99, 132, 0.2)',
+              'rgba(255, 159, 64, 0.2)',
+              'rgba(255, 205, 86, 0.2)',
+              'rgba(75, 192, 192, 0.2)',
+              'rgba(54, 162, 235, 0.2)',
+              'rgba(153, 102, 255, 0.2)',
+              'rgba(201, 203, 207, 0.2)'
+            ],
+            borderColor: [
+              'rgb(255, 99, 132)',
+              'rgb(255, 159, 64)',
+              'rgb(255, 205, 86)',
+              'rgb(75, 192, 192)',
+              'rgb(54, 162, 235)',
+              'rgb(153, 102, 255)',
+              'rgb(201, 203, 207)'
+            ],
+            borderWidth: 1
+          }]
+        },
+        options: {
+          indexAxis: 'y',
+        }
+      });
+    </script>
+    </div>
+</div>
+
+{% endblock %}

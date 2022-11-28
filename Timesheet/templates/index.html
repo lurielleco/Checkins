@@ -1,0 +1,60 @@
+{%extends 'base.html' %}
+{% block content %}
+<!-- Table -->
+<!-- Form -->
+        <div class="col-lg-12">
+            <div class="card">
+            <div class="card-body">
+              <ul class="nav nav-tabs nav-tabs-bordered">
+                <li class="nav-item">
+                  <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#checkins">Checkins</button>
+                </li>
+                  <form action="{% url 'retrieve' %}">
+                      {% csrf_token %}
+                    <li class="nav-item">
+                      <button class="nav-link" data-bs-toggle="tab" data-bs-target="#per-user">Checkin Per User</button>
+                    </li>
+                  </form><!-- End Retrieve Form -->
+              </ul>
+              <div class="tab-content pt-2">
+
+                <div class="tab-pane fade show active checkins pt-3" id="checkins">
+                    <h1> Checkins </h1>
+                    <table class="table table-bordered table-striped" id="sortTable">
+                      <thead>
+                        <tr>
+                          <th scope="col">User</th>
+                          <th scope="col">Date Checkin</th>
+                          <th scope="col">Hours</th>
+                          <th scope="col">Project</th>
+                        </tr>
+                      </thead>
+                        <tbody>
+                        {% for item in all %}
+                            <tr>
+                                <td scope = "row">{{item.user}}</td>
+                                <td scope = "row">{{item.date_checkin}} </td>
+                                <td scope = "row">{{item.hours}} </td>
+                                <td scope = "row">{{item.project}} </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="tab-pane fade per-user pt-3" id="per-user">
+                  <!-- New Proj Form -->
+                  <form method="POST" action="retrieve.html">
+
+                  </form><!-- End New Proj Form -->
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+<script>
+$('#sortTable').DataTable();
+</script>
+
+{% endblock %}
